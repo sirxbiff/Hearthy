@@ -55,11 +55,17 @@ bot = Cinch::Bot.new do
       # search for all instances of query in the Name column
       found_cards = Array.new
       cards.each { |card|
-        if query.downcase.split(":").first == 'desc' then
-          # if (card["Description"].downcase[query.downcase.split(":").last] != nil) then
+        # check if we are searching on description
+        if query.downcase.split(":").first == 'desc'
           if (card["Description"] != nil && card["Description"].downcase[query.downcase.split(":").last] != nil) then
             found_cards.push(card)
           end
+        # check if we are searching on race
+        elsif query.downcase.split(":").first == 'race'
+          if (card["Race"] != nil && card["Race"].downcase[query.downcase.split(":").last] != nil) then
+            found_cards.push(card)
+          end
+        # search on the total string
         else
           if (card["Name"].downcase[query.downcase] != nil) then 
             found_cards.push(card)
