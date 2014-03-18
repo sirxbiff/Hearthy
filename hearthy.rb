@@ -81,7 +81,11 @@ bot = Cinch::Bot.new do
         reply_card(m, card, colors) unless card.nil?
 
         # and print them
-        m.reply "\001ACTION heeft #{found_cards.length} kaarten gevonden: #{card_array_string}"
+        if (found_cards.length <= 25) then
+          m.reply "\001ACTION heeft #{found_cards.length} kaarten gevonden: #{card_array_string}"
+        else 
+          m.reply "\001ACTION heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 25 zijn laat ik de namen niet zien."
+        end
       end
     end
   end
