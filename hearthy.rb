@@ -46,7 +46,7 @@ bot = Cinch::Bot.new do
       colors["Rare"] = :blue
       colors["Common"] = :white
       colors["Basic"] = :white
-      
+
       # I should perhaps load the list once instead of every query XXX
       # cards obtained from http://hearthstonecardlist.com/
       # open the cards csv file for reading while maintaining column headers and converting numeric values
@@ -55,10 +55,18 @@ bot = Cinch::Bot.new do
       # search for all instances of query in the Name column
       found_cards = Array.new
       cards.each { |card|
-        if (card["Name"].downcase[query.downcase] != nil) then 
-          found_cards.push(card)
+        if query.downcase.split(":").first == 'desc' then
+          # if (card["Description"].downcase[query.downcase.split(":").last] != nil) then
+          if (card["Description"] != nil && card["Description"].downcase[query.downcase.split(":").last] != nil) then
+            found_cards.push(card)
+          end
+        else
+          if (card["Name"].downcase[query.downcase] != nil) then 
+            found_cards.push(card)
+          end
         end
       }      
+      found_cards = found_cards.sort_by {|i| i["Name"]}
 
       # act depending on the number of found cards
       case found_cards.length
@@ -82,10 +90,10 @@ bot = Cinch::Bot.new do
           reply_card(m, card, colors)
         else
           # and print them
-          if (found_cards.length <= 25) then
+          if (found_cards.length <= 50) then
             m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden: " + Format(:bold, "#{card_array_string}"))
           else 
-            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 25 zijn laat ik ze niet zien.")
+            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 50 zijn laat ik ze niet zien.")
           end
         end
       end
