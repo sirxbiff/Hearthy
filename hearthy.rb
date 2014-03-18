@@ -90,7 +90,7 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /\[(.+)\]/ do |m, query|
+  on :message, /\[([^\]]+)\]/ do |m, query|
     #m.reply "\001ACTION zoekt naar [#{query}]\001"
     hs(m, query)
   end
