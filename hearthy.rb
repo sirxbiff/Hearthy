@@ -20,10 +20,10 @@ bot = Cinch::Bot.new do
         
         # mana and if available, attack and health
         reply = ""
-        reply += "M:#{card["Mana"]} " if card["Mana"] != nil
-        reply += "A:#{card["Attack"]} " if card["Attack"] != nil
-        reply += "H:#{card["Health"]}" if card["Health"] != nil
-        m.reply Format(:bold, reply)
+        reply += "M:" + "#{card["Mana"]} " if card["Mana"] != nil
+        reply += "| A:" + "#{card["Attack"]} " if card["Attack"] != nil
+        reply += "H:" + "#{card["Health"]}" if card["Health"] != nil
+		m.reply Format(:bold, reply)
         
         # description if applicable
         m.reply Format(:lime, "#{card["Description"]}") if card["Description"] != nil
@@ -42,7 +42,7 @@ bot = Cinch::Bot.new do
       colors["Hunter"] = :green
       colors["Paladin"] = :pink
       colors["Epic"] = :purple
-      colors["Legendary"] = :orange
+      colors["Legendary"] = :red
       colors["Rare"] = :blue
       colors["Common"] = :white
       colors["Basic"] = :white
@@ -63,7 +63,7 @@ bot = Cinch::Bot.new do
       # act depending on the number of found cards
       case found_cards.length
       when 0
-        m.reply "\001ACTION heeft niets kunnen vinden voor [#{query}] :/\001"
+        m.reply "\001ACTION " + Format(:green, "heeft niets kunnen vinden voor [#{query}] :/")
       when 1 # one card found
         p found_cards[0]
         card = found_cards[0]
@@ -73,18 +73,20 @@ bot = Cinch::Bot.new do
       else # when multiple cards look like the search query
         # stick all cardnames together
         card_array = Array.new
-        found_cards.each { |card| card_array.push("[" + card["Name"] + "]") }
-        card_array_string = card_array.join(", ")
+        found_cards.each { |card| card_array.push(Format(colors[card["Rarity"]], "["+card["Name"]+"]")) }
+        card_array_string = card_array.join(" ")
 
         card = found_cards.select{ |c| c["Name"].downcase == query.downcase }[0]
-
-        reply_card(m, card, colors) unless card.nil?
-
-        # and print them
-        if (found_cards.length <= 25) then
-          m.reply "\001ACTION heeft #{found_cards.length} kaarten gevonden: #{card_array_string}"
-        else 
-          m.reply "\001ACTION heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 25 zijn laat ik de namen niet zien."
+		# if there is an exact match, display the card, else, display all the options
+        if (!card.nil?) then
+          reply_card(m, card, colors)
+        else
+          # and print them
+          if (found_cards.length <= 25) then
+            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden: " + Format(:bold, "#{card_array_string}"))
+          else 
+            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 25 zijn laat ik ze niet zien.")
+          end
         end
       end
     end
