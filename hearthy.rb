@@ -13,18 +13,19 @@ bot = Cinch::Bot.new do
         # first line: name - type - (race) - class
         reply = Format("%s - #{card["Type"]}" % [Format(colors[card["Rarity"]], card["Name"])])
         reply += " (#{card["Race"]})" if card["Race"] != nil
+        reply = Format(:bold, reply)
         if card["Class"] != nil and card["Class"] != "All" then 
           reply += Format(colors[card["Class"]], " - #{card["Class"]}")
         end
-        m.reply Format(:bold, reply)
+        m.reply reply
         
         # mana and if available, attack and health
         reply = ""
         reply += "M:" + "#{card["Mana"]} " if card["Mana"] != nil
         reply += "| A:" + "#{card["Attack"]} " if card["Attack"] != nil
         reply += "H:" + "#{card["Health"]}" if card["Health"] != nil
-		m.reply Format(:bold, reply)
-        
+ 		m.reply Format(:bold, reply)
+
         # description if applicable
         m.reply Format(:lime, "#{card["Description"]}") if card["Description"] != nil
     end
@@ -32,15 +33,16 @@ bot = Cinch::Bot.new do
     def hs(m, query)
       #  http://rubydoc.info/gems/cinch/Cinch/Formatting     
       colors = Hash.new
-      colors["Druid"] = :orange
-      colors["Mage"] = :royal
+      colors["Druid"] = :red
+      colors["Mage"] = :aqua
       colors["Warlock"] = :purple
       colors["Shaman"] = :blue
-      colors["Warrior"] = :red
+      colors["Warrior"] = :orange
       colors["Priest"] = :white
       colors["Rogue"] = :yellow
-      colors["Hunter"] = :green
+      colors["Hunter"] = :lime
       colors["Paladin"] = :pink
+
       colors["Epic"] = :purple
       colors["Legendary"] = :red
       colors["Rare"] = :blue
@@ -72,7 +74,7 @@ bot = Cinch::Bot.new do
           end
         end
       }      
-      found_cards = found_cards.sort_by {|i| i["Name"]}
+      found_cards = found_cards.sort_by {|i| [i["Class"], i["Name"]]}
 
       # act depending on the number of found cards
       case found_cards.length
@@ -87,7 +89,18 @@ bot = Cinch::Bot.new do
       else # when multiple cards look like the search query
         # stick all cardnames together
         card_array = Array.new
-        found_cards.each { |card| card_array.push(Format(colors[card["Rarity"]], "["+card["Name"]+"]")) }
+        current_class = ''
+        # go through the cards, and display each class on a new row
+        for card in found_cards
+          card_string = '' 
+          if card["Class"] != current_class
+            current_class = card["Class"] 
+            card_string += "\n" + Format(colors[card["Class"]], card["Class"] + ': ')
+          end 
+          card_string += Format(colors[card["Rarity"]], "["+card["Name"]+"]") 
+          card_array.push(card_string)
+        end
+
         card_array_string = card_array.join(" ")
 
         card = found_cards.select{ |c| c["Name"].downcase == query.downcase }[0]
