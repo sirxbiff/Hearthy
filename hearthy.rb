@@ -124,6 +124,11 @@ bot = Cinch::Bot.new do
     hs(m, query)
   end
 
+  on :message, /Well played.*Hearthy.?/ do |m, query|
+    m.reply "You have bested me!"
+    bot.quit
+  end
+
   trap "SIGINT" do
     bot.quit
   end
