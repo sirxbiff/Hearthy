@@ -106,16 +106,16 @@ bot = Cinch::Bot.new do
         card_array_string = card_array.join(" ")
 
         card = found_cards.select{ |c| c.name.downcase == query.downcase }[0]
-		# if there is an exact match, display the card, else, display all the options
+        # always print all the options
+        if (found_cards.length <= 50) then
+          m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden: " + Format(:bold, "#{card_array_string}"))
+        else 
+          m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 50 zijn laat ik ze niet zien.")
+        end
+        
+        # if there is an exact match, print it as well
         if (!card.nil?) then
           reply_card(m, card, colors)
-        else
-          # and print them
-          if (found_cards.length <= 50) then
-            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden: " + Format(:bold, "#{card_array_string}"))
-          else 
-            m.reply "\001ACTION " + Format(:green, "heeft #{found_cards.length} kaarten gevonden. Omdat het er meer dan 50 zijn laat ik ze niet zien.")
-          end
         end
       end
     end
