@@ -18,7 +18,7 @@ bot = Cinch::Bot.new do
         if card.class != nil and card.class != "All" then 
           reply += Format(colors[card.class], " - #{card.class}")
         end
-        if card["Category"] == 'Token' then
+        if !card.collectible then
           reply += Format(:bold, " - Token")
         end
         m.reply reply

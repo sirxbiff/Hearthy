@@ -61,6 +61,10 @@ class GithubHashCard
     end
   end
 
+  def collectible
+    @data_hash["collectible"]
+  end
+
   def class
     if (@data_hash["hero"] == "neutral")
       "All"
