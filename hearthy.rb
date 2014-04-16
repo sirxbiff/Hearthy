@@ -17,6 +17,9 @@ bot = Cinch::Bot.new do
         if card["Class"] != nil and card["Class"] != "All" then 
           reply += Format(colors[card["Class"]], " - #{card["Class"]}")
         end
+        if card["Category"] == 'Token' then
+          reply += Format(:bold, " - Token")
+        end
         m.reply reply
         
         # mana and if available, attack and health
