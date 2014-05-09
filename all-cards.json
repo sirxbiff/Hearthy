@@ -1,7 +1,7 @@
 {
     "meta": {
-            "patch": "1.0.0.4944",
-            "last_updated": "16.03.2014",
+            "patch": "1.0.0.5314",
+            "last_updated": "08.05.2014",
             "repository": "http://github.com/pdyck/hearthstone-db",
             "updated_by": "@philippdyck"
         },
@@ -739,6 +739,7 @@
         "health": 1,
         "collectible": false,
         "effect_list": [
+          
         ]
       },
       {
@@ -8459,7 +8460,7 @@
         "quality": "common",
         "race": "none",
         "set": "expert",
-        "mana": 2,
+        "mana": 3,
         "attack": null,
         "health": null,
         "collectible": true,
